@@ -118,9 +118,14 @@ if __name__ == "__main__":
 
 	with mp.Pool(count_workers, init_worker) as pool:
 		try:
+			# for a single for loop the res.get method works. If you have multiple for loops and want to wait for all inner loop jobs to finish, setting up the res_table is necessary, if you want to process the results of the inner for loop before moving on the iteration of the outer for loop
+			#res_table = []
 			for idx_1, variable_1 in enumerate(variable_1_table):
 				res = pool.apply_async(compute_observables_variable_1, (variable_1,), callback=collect_results)
 				res.get(9999999)
+				#res_table.append(res)
+			#[result.wait() for result in res_table]
+
 		except KeyboardInterrupt:
 			print("Caught KeyboardInterrupt, terminating workers")
 			print("Will now save current state of program into h5py file.")
